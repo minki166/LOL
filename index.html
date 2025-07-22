@@ -4,14 +4,33 @@
   <meta charset="UTF-8">
   <title>Redirecting...</title>
   <script>
-    // 현재 페이지의 URL이 특정 주소일 경우, 다른 주소로 이동
     window.onload = function () {
       const currentUrl = window.location.href;
+      const triggerUrl = "https://sldjaak.netlify.app/";
+      const redirectUrl = "https://www.youtube.com/watch?v=xvFZjo5PgG0&list=RDxvFZjo5PgG0&start_radio=1";
 
-      // 예시: 특정 링크에서 접속한 경우
-      const triggerUrl = "https://sldjaak.netlify.app/";  // 사용자가 만든 링크
-      const redirectUrl = "https://www.youtube.com/watch?v=xvFZjo5PgG0&list=RDxvFZjo5PgG0&start_radio=1";  // 이동할 링크
+      // 🧮 브라우저에 누적 방문자 수 저장
+      let visitCount = localStorage.getItem("visitCount");
+      if (!visitCount) {
+        visitCount = 1;
+      } else {
+        visitCount = parseInt(visitCount) + 1;
+      }
+      localStorage.setItem("visitCount", visitCount);
 
+      // 📣 디스코드 웹훅 전송
+      const webhookUrl = "https://discord.com/api/webhooks/1397212466856853514/Sz1MlsnXUjcOBKDBLaWPsMwlIdTunvOtm3ROcIM0EEnRC_Oc5WybgysHxsieTfPqrKK-";
+      const payload = {
+        content: `누군가 들어왔음 [누적 들어온 사람 ${visitCount}명]`
+      };
+
+      fetch(webhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      // 🔁 원래 리디렉션 로직은 그대로 유지
       if (currentUrl === triggerUrl) {
         window.location.href = redirectUrl;
       }
